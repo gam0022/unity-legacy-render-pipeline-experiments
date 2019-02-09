@@ -4,6 +4,7 @@
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+        _InvFade ("_InvFade", Float) = 1.0
     }
     SubShader
     {
@@ -29,7 +30,7 @@
             {
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
-                half4 spos : TEXCOORD2;
+                float4 projPos : TEXCOORD2;
             };
 
             sampler2D _MainTex;
@@ -38,27 +39,29 @@
 
             sampler2D _CameraDepthTexture;
             float4 _CameraDepthTexture_ST;
+            
+            float _InvFade;
 
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.spos = ComputeScreenPos(v.vertex);
+                o.projPos = ComputeScreenPos(o.vertex);
+                COMPUTE_EYEDEPTH(o.projPos.z);
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed depth = UNITY_SAMPLE_DEPTH(tex2D(_MainTex, i.spos));
-                return fixed4(depth, depth, depth, 0.8);
-                
-                
-                // sample the texture
                 fixed4 col = _Color;
-                
-                //fixed4 depth = UNITY_SAMPLE_DEPTH(tex2D(_CameraDepthTexture, i.spos));
-                //col.a = depth;
+ 
+                float sceneZ = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)));
+                float partZ = i.projPos.z;
+    
+                float fade = saturate(_InvFade * (sceneZ - partZ));
+                col.a *= fade;
+ 
                 return col;
             }
             ENDCG
