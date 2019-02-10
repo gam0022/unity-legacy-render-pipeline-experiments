@@ -70,16 +70,14 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = _Color;
-                
-                fixed4 noise1 = tex2D(_MainTex, i.uv);
-                fixed4 noise2 = tex2D(_MainTex, i.uv + _Time.y * 0.2);
-                col.a *= 0.5 + 0.25 * (noise1.r + noise2.r);
  
                 float sceneZ = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)));
                 float partZ = i.projPos.z;
-    
-                col.a *= _Density * (sceneZ - partZ);
-                col.a = clamp(col.a, 0.05, 0.9);
+                col.a = clamp(col.a * _Density * (sceneZ - partZ), 0.05, 0.8);
+                
+                fixed4 noise1 = tex2D(_MainTex, i.uv);
+                fixed4 noise2 = tex2D(_MainTex, i.uv + _Time.y * 0.2);
+                col.a *= saturate(0.75 + 0.25 * (noise1.r + noise2.r));
                 
                 return col;
             }
