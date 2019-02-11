@@ -4,8 +4,12 @@
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-        _Density ("_Density", Float) = 1.0
-        _WaveFreq("_WaveFreq", Float) = 100.0
+        _Density ("Density", Range(0, 0.5)) = 1.0
+        _DepthRate("Depth Rate", Range(0, 1)) = 0.8
+        
+        _WaveFreq("WaveFreq", Range(0, 100)) = 100.0
+        _WaveAmplitude("Wave Amplitude", Range(0, 1)) = 0.5
+        _WaveSpeed("Wave Speed", Range(0, 1)) = 0.1
     }
     SubShader
     {
@@ -42,24 +46,22 @@
             float4 _CameraDepthTexture_ST;
             
             float _Density;
-            float _WaveFreq;
+            float _DepthRate;
             
-            float2x2 rotate(in float a)
-            {
-                float s = sin(a), c = cos(a);
-                return float2x2(c, s, -s, c);
-            }
+            float _WaveFreq;
+            float _WaveAmplitude;
+            float _WaveSpeed;
 
             v2f vert (appdata v)
             {
                 v2f o;
                
                 fixed2 uv = v.uv;
-                uv.x += 0.1 * sin(8.0 * uv.y + 0.3 * _Time.y);
-                uv.y += 0.1 * sin(8.0 * uv.x + 0.3 * _Time.y);
+                uv.x += 0.1 * sin(8.0 * uv.y + _WaveSpeed * _Time.y);
+                uv.y += 0.1 * sin(8.0 * uv.x + _WaveSpeed * _Time.y);
                 o.uv = TRANSFORM_TEX(uv, _MainTex);
                 
-                v.vertex.y += 0.5 * sin(_WaveFreq * uv.x) + 0.5 * sin(_WaveFreq * uv.y);
+                v.vertex.y += _WaveAmplitude * (sin(_WaveFreq * uv.x) + sin(_WaveFreq * uv.y));
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 
                 o.projPos = ComputeScreenPos(o.vertex);
@@ -76,8 +78,12 @@
                 col.a = clamp(col.a * _Density * (sceneZ - partZ), 0.05, 0.8);
                 
                 fixed4 noise1 = tex2D(_MainTex, i.uv);
-                fixed4 noise2 = tex2D(_MainTex, i.uv + _Time.y * 0.2);
-                col.a *= saturate(0.75 + 0.25 * (noise1.r + noise2.r));
+                
+                i.uv.x += 0.1 * sin(8.0 * i.uv.y + _WaveSpeed * _Time.y);
+                i.uv.y += 0.1 * sin(8.0 * i.uv.x + _WaveSpeed * _Time.y);
+                fixed4 noise2 = tex2D(_MainTex, i.uv);
+                
+                col.a *= saturate(_DepthRate + 0.5 * (1.0 - _DepthRate) * (noise1.r + noise2.r));
                 
                 return col;
             }
