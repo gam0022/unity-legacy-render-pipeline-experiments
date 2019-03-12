@@ -79,8 +79,8 @@
                 
                 fixed4 noise1 = tex2D(_MainTex, i.uv);
                 
-                i.uv.x += 0.1 * sin(8.0 * i.uv.y + _WaveSpeed * _Time.y);
-                i.uv.y += 0.1 * sin(8.0 * i.uv.x + _WaveSpeed * _Time.y);
+                i.uv.x += 0.1 * sin(8.0 * i.uv.y + 4.0 * _WaveSpeed * _Time.y);
+                i.uv.y += 0.1 * sin(8.0 * i.uv.x + 4.0 * _WaveSpeed * _Time.y);
                 fixed4 noise2 = tex2D(_MainTex, i.uv);
                 
                 col.a *= saturate(_DepthRate + 0.5 * (1.0 - _DepthRate) * (noise1.r + noise2.r));
