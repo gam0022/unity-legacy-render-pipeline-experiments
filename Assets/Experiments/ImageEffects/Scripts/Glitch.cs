@@ -14,6 +14,7 @@ namespace Demoscene.ImageEffect
         readonly int flashSpeedId = Shader.PropertyToID("_FlashSpeed");
         readonly int flashColorID = Shader.PropertyToID("_FlashColor");
         readonly int blendColorId = Shader.PropertyToID("_BlendColor");
+        readonly int invertId = Shader.PropertyToID("_Invert");
 
         [SerializeField] Material material;
         [SerializeField, Range(0, 1.0f)] float always;
@@ -24,6 +25,7 @@ namespace Demoscene.ImageEffect
         [SerializeField, Range(0, 100f)] float flashSpeed;
         [SerializeField] Color flashColor = Color.clear;
         [SerializeField] Color blendColor = Color.clear;
+        [SerializeField, Range(0, 1.0f)] float invert;
 
         void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
@@ -35,6 +37,7 @@ namespace Demoscene.ImageEffect
             material.SetFloat(flashSpeedId, flashSpeed);
             material.SetColor(flashColorID, flashColor);
             material.SetColor(blendColorId, blendColor);
+            material.SetFloat(invertId, invert);
 
             Graphics.Blit(source, destination, material);
         }
