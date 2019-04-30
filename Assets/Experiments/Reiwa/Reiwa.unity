@@ -595,16 +595,16 @@ MonoBehaviour:
   glitchUvIntensity: 0
   distortionIntensity: 0
   rgbShiftIntensity: 0.0044
-  noiseIntensity: 0.0539
-  flashSpeed: 9
+  noiseIntensity: 0
+  flashSpeed: 0
   flashColor: {r: 0, g: 0, b: 0, a: 0}
   blendColor: {r: 0, g: 0, b: 0, a: 0}
   invert: 0
-  ifsIteration: 0
+  ifsIteration: 0.88
   ifsRateA: 0
   ifsRateB: 0
   ifsRateC: 0
-  ifsRateD: 0
+  ifsRateD: 1
 --- !u!114 &1960757524
 MonoBehaviour:
   m_ObjectHideFlags: 0

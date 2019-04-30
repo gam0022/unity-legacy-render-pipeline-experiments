@@ -62,20 +62,20 @@ Material:
     - _DetailNormalMapScale: 1
     - _DistortionIntensity: 0
     - _DstBlend: 0
-    - _FlashSpeed: 9
+    - _FlashSpeed: 0
     - _GlitchUvIntensity: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _IfsIteration: 0
     - _IfsRateA: 0
-    - _IfsRateB: 0
+    - _IfsRateB: -0.105285645
     - _IfsRateC: 0
-    - _IfsRateD: 0
+    - _IfsRateD: 1
     - _Invert: 0
     - _Metallic: 0
     - _Mode: 0
-    - _NoiseIntensity: 0.0539
+    - _NoiseIntensity: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _RgbShiftIntensity: 0.0044
