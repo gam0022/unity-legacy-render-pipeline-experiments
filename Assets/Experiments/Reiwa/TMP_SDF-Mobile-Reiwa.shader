@@ -118,6 +118,8 @@ SubShader {
 			#endif
 		};
 
+        float _LocalTime;
+		float _LocalDuration;
 
 		pixel_t VertShader(vertex_t input)
 		{
@@ -200,7 +202,8 @@ SubShader {
 			
 			half d1 = tex2D(_MainTex, input.texcoord0.xy).a * input.param.x;
 			half d2 = tex2D(_MainTex, input.texcoord0.xy - float2(0.0, 0.5)).a * input.param.x;
-			half d = lerp(d1, d2, 0.5 * (1.0 + sin(0.5 * PI * _Time.y)));
+			half rate = 0.5 * (1.0 + sin(0.5 * PI * _LocalTime - 0.5 * PI));
+			half d = lerp(d1, d2, rate);
 			half4 c = input.faceColor * saturate(d - input.param.w);
 
 			#ifdef OUTLINE_ON
