@@ -67,7 +67,7 @@ Shader "Demoscene/ImageEffect/Reiwa-Glitch"
                 half2 uv = i.uv;
 
                 float vibration = saturate(cos(_Beat * PI2));
-                //vibration = mix(vibration, 1.0, _Always);
+                vibration = mix(vibration, 1.0, _Always);
 
                 // grid hash
                 float2 hash = hash23(float3(floor(half2(uv.x * 32.0, uv.y * 32.0)), _Beat));
