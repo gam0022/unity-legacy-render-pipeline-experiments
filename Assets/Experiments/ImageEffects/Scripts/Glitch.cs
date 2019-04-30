@@ -15,6 +15,12 @@ namespace Demoscene.ImageEffect
         readonly int flashColorID = Shader.PropertyToID("_FlashColor");
         readonly int blendColorId = Shader.PropertyToID("_BlendColor");
         readonly int invertId = Shader.PropertyToID("_Invert");
+        
+        readonly int ifsIterationId = Shader.PropertyToID("_IfsIteration");
+        readonly int ifsRateAId = Shader.PropertyToID("_IfsRateA");
+        readonly int ifsRateBId = Shader.PropertyToID("_IfsRateB");
+        readonly int ifsRateCId = Shader.PropertyToID("_IfsRateC");
+        readonly int ifsRateDId = Shader.PropertyToID("_IfsRateD");
 
         [SerializeField] Material material;
         [SerializeField, Range(0, 1.0f)] float always;
@@ -27,6 +33,12 @@ namespace Demoscene.ImageEffect
         [SerializeField] Color blendColor = Color.clear;
         [SerializeField, Range(0, 1.0f)] float invert;
 
+        [SerializeField, Range(0, 10.0f)] float ifsIteration;
+        [SerializeField, Range(0, 1.0f)] float ifsRateA;
+        [SerializeField, Range(0, 1.0f)] float ifsRateB;
+        [SerializeField, Range(0, 1.0f)] float ifsRateC;
+        [SerializeField, Range(0, 2.0f)] float ifsRateD;
+
         void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
             material.SetFloat(alwaysId, always);
@@ -38,6 +50,12 @@ namespace Demoscene.ImageEffect
             material.SetColor(flashColorID, flashColor);
             material.SetColor(blendColorId, blendColor);
             material.SetFloat(invertId, invert);
+            
+            material.SetFloat(ifsIterationId, ifsIteration);
+            material.SetFloat(ifsRateAId, ifsRateA);
+            material.SetFloat(ifsRateBId, ifsRateB);
+            material.SetFloat(ifsRateCId, ifsRateC);
+            material.SetFloat(ifsRateDId, ifsRateD);
 
             Graphics.Blit(source, destination, material);
         }

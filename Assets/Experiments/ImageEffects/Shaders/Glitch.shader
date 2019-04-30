@@ -12,6 +12,12 @@ Shader "Demoscene/ImageEffect/Reiwa-Glitch"
         _FlashColor("Flash Color", Color) = (0.0, 0.0, 0.0, 0.0)
         _BlendColor("Blend Color", Color) = (0.0, 0.0, 0.0, 0.0)
         _Invert("Invert Rate", Range(0.0, 1.0)) = 0.0
+        
+        _IfsIteration("Ifs Iteration", Range(0.0, 10.0)) = 0.0
+        _IfsRateA("Ifs Rate A", Range(0.0, 1.0)) = 0.0
+        _IfsRateB("Ifs Rate B", Range(0.0, 1.0)) = 0.0
+        _IfsRateC("Ifs Rate C", Range(0.0, 1.0)) = 0.7
+        _IfsRateD("Ifs Rate D", Range(0.0, 2.0)) = 1.2
     }
     SubShader
     {
@@ -60,6 +66,12 @@ Shader "Demoscene/ImageEffect/Reiwa-Glitch"
             fixed4 _FlashColor;
             fixed4 _BlendColor;
             float _Invert;
+            
+            float _IfsIteration;
+            float _IfsRateA;
+            float _IfsRateB;
+            float _IfsRateC;
+            float _IfsRateD;
 
             fixed4 frag (v2f i) : SV_Target
             {
@@ -68,6 +80,24 @@ Shader "Demoscene/ImageEffect/Reiwa-Glitch"
 
                 float vibration = saturate(cos(_Beat * PI2));
                 vibration = mix(vibration, 1.0, _Always);
+                
+                // ifs
+                // TODO: Use ShaderVariant
+                if (_IfsIteration > 0) {
+                    vec2 q = (uv - 0.5) * 4.0;
+                    //float d = 9999.0;
+                    float z = _IfsRateA * PI2;
+                    for (int j = 0; j < _IfsIteration; ++j) {
+                        q = abs(q - _IfsRateC);
+                        q = mul(rot(_IfsRateB * PI2), q);
+                        q = abs(q - _IfsRateC);
+                        q = mul(rot(z), q);
+                        q *= _IfsRateD;
+                        //float k = sdRect(q, vec2(0.6, 0.1 + q.x));
+                        //d = min(d, k);
+                    }
+                    uv = q;
+                }
 
                 // grid hash
                 float2 hash = hash23(float3(floor(half2(uv.x * 32.0, uv.y * 32.0)), _Beat));

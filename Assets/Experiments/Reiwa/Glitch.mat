@@ -67,6 +67,11 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _IfsIteration: 0
+    - _IfsRateA: 0
+    - _IfsRateB: 0
+    - _IfsRateC: 0
+    - _IfsRateD: 0
     - _Invert: 0
     - _Metallic: 0
     - _Mode: 0

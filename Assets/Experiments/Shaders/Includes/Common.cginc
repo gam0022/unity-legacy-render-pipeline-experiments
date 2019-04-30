@@ -26,6 +26,10 @@ vec3 hsvToRgb(vec3 c) {
 	return c.z * mix(K.xxx, saturate(p - K.xxx), c.y);
 }
 
+mat2 rot(float x)
+{
+    return mat2(cos(x), sin(x), -sin(x), cos(x));
+}
 
 // Hash without Sine
 // Creative Commons Attribution-ShareAlike 4.0 International Public License
