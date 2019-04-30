@@ -60,19 +60,20 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DistortionIntensity: 0.0006
+    - _DistortionIntensity: 0.0119
     - _DstBlend: 0
-    - _FlashSpeed: 0
+    - _FlashSpeed: 9
     - _GlitchUvIntensity: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _Invert: 0
     - _Metallic: 0
     - _Mode: 0
-    - _NoiseIntensity: 0
+    - _NoiseIntensity: 0.0539
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RgbShiftIntensity: 0
+    - _RgbShiftIntensity: 0.0044
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

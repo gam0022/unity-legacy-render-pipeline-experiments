@@ -11,6 +11,7 @@ Shader "Demoscene/ImageEffect/Reiwa-Glitch"
         _FlashSpeed("Flash Speed", Range(0.0, 100.0)) = 0.0
         _FlashColor("Flash Color", Color) = (0.0, 0.0, 0.0, 0.0)
         _BlendColor("Blend Color", Color) = (0.0, 0.0, 0.0, 0.0)
+        _Invert("Invert Rate", Range(0.0, 1.0)) = 0.0
     }
     SubShader
     {
@@ -58,14 +59,15 @@ Shader "Demoscene/ImageEffect/Reiwa-Glitch"
             float _FlashSpeed;
             fixed4 _FlashColor;
             fixed4 _BlendColor;
+            float _Invert;
 
             fixed4 frag (v2f i) : SV_Target
             {
                 half3 col;
                 half2 uv = i.uv;
 
-                float vibration = saturate(cos(0.0 * _Beat) * cos(_Beat * PI2));
-                vibration = mix(vibration, 1.0, _Always);
+                float vibration = saturate(cos(_Beat * PI2));
+                //vibration = mix(vibration, 1.0, _Always);
 
                 // grid hash
                 float2 hash = hash23(float3(floor(half2(uv.x * 32.0, uv.y * 32.0)), _Beat));
@@ -78,7 +80,8 @@ Shader "Demoscene/ImageEffect/Reiwa-Glitch"
 
                 // rgb shift
                 float angle = hash.x * PI2;
-                half2 offset = _RgbShiftIntensity * vibration * half2(cos(angle), sin(angle));
+                //half2 offset = _RgbShiftIntensity * vibration * half2(cos(angle), sin(angle));
+                half2 offset = _RgbShiftIntensity * vibration * half2(1, 1);
                 fixed4 cr = tex2D(_MainTex, uv - offset);
                 fixed4 cg = tex2D(_MainTex, uv);
                 fixed4 cb = tex2D(_MainTex, uv + offset);
@@ -92,6 +95,9 @@ Shader "Demoscene/ImageEffect/Reiwa-Glitch"
 
                 // alpha blend
                 col = mix(col, _BlendColor.rgb, _BlendColor.a);
+                
+                // invert
+                col = mix(col, 1 - col, step(hash11(i.uv.y * 12) + 0.001, _Invert));
 
                 return fixed4(col, cg.a);
             }
