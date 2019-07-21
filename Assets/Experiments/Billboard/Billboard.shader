@@ -46,17 +46,26 @@
                 }
                 #elif _BILLBOARD_ALL_AXIS
                 {
-                    float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0)) + float3(v.vertex.xy, -v.vertex.z);// 右手系に変換
+                    float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0));
+                    
+                    // zの符号を反転して右手系に変換
+                    float3 worldPos = mul((float3x3)unity_ObjectToWorld, v.vertex);
+                    viewPos += float3(worldPos.xy, -worldPos.z);
+                    
                     o.vertex = mul(UNITY_MATRIX_P, float4(viewPos, 1.0));
                 }
                 #elif _BILLBOARD_Y_AXIS
                 {
+                    float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0));
+                    float3 worldPos = mul((float3x3)unity_ObjectToWorld, v.vertex);
+                    
                     float3x3 ViewRotateY = float3x3(
                         1, UNITY_MATRIX_V._m01, 0,
                         0, UNITY_MATRIX_V._m11, 0,
-                        0, UNITY_MATRIX_V._m21, -1// 右手系に変換
+                        0, UNITY_MATRIX_V._m21, -1// zの符号を反転して右手系に変換
                     );
-                    float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0)) + mul(ViewRotateY, v.vertex);
+                    viewPos += mul(ViewRotateY, worldPos);
+                    
                     o.vertex = mul(UNITY_MATRIX_P, float4(viewPos, 1.0));
                 }
                 #endif
