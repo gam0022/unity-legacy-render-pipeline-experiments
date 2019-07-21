@@ -4,10 +4,11 @@
     {
         _MainTex ("Texture", 2D) = "white" {}
         [KeywordEnum(OFF, ALL_AXIS, Y_AXIS)] _BILLBOARD("Billboard Mode", Float) = 1
+        _Cutoff ("Alpha Cutoff", Range(0, 1)) = 0.5
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags{ "Queue" = "AlphaTest" "RenderType" = "TransparentCutout" "IgnoreProjector" = "True" }
 
         Pass
         {
@@ -35,6 +36,8 @@
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            
+            float _Cutoff;
 
             v2f vert (appdata v)
             {
@@ -83,6 +86,8 @@
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
+                clip(col.a - _Cutoff);
+                
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
