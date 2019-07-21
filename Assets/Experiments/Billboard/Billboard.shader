@@ -49,25 +49,26 @@
                     o.vertex = UnityObjectToClipPos(v.vertex);
                 }
                 #elif _BILLBOARD_ALL_AXIS
-                {
-                    // スケールと回転のみ（平行移動なし）だけのワールド変換
-                    float3 scaleRotatePos = mul((float3x3)unity_ObjectToWorld, v.vertex);
-                    
+                {                   
                     // Meshの原点をModelView変換
                     float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0));
                     
-                    // zの符号を反転して右手系に変換して、View変換をスキップした座標をviewPosに加算
+                    // スケールと回転（平行移動なし）だけModel変換して、View変換はスキップ
+                    float3 scaleRotatePos = mul((float3x3)unity_ObjectToWorld, v.vertex);
+                    
+                    // scaleRotatePosを右手系に変換して、viewPosに加算
+                    // 本来はView変換で暗黙的にZが反転されているので、View変換をスキップする場合は明示的にZを反転する必要がある
                     viewPos += float3(scaleRotatePos.xy, -scaleRotatePos.z);
                     
                     o.vertex = mul(UNITY_MATRIX_P, float4(viewPos, 1.0));
                 }
                 #elif _BILLBOARD_Y_AXIS
                 {
-                    // スケールと回転のみ（平行移動なし）だけのワールド変換
-                    float3 scaleRotatePos = mul((float3x3)unity_ObjectToWorld, v.vertex);
-                    
                     // Meshの原点をModelView変換
                     float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0));
+                    
+                    // スケールと回転（平行移動なし）だけModel変換して、View変換はスキップ
+                    float3 scaleRotatePos = mul((float3x3)unity_ObjectToWorld, v.vertex);                
                     
                     // View行列からY軸の回転だけ抽出した行列を生成
                     float3x3 ViewRotateY = float3x3(
