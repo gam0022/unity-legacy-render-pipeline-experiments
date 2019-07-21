@@ -46,10 +46,10 @@
                 }
                 #elif _BILLBOARD_ALL_AXIS
                 {
-                    float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0));
-                    
                     // スケールと回転のみ（平行移動なし）のworldPos
                     float3 scaleRotatePos = mul((float3x3)unity_ObjectToWorld, v.vertex);
+                    
+                    float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0));
                     
                     // zの符号を反転して右手系に変換
                     viewPos += float3(scaleRotatePos.xy, -scaleRotatePos.z);
@@ -58,10 +58,10 @@
                 }
                 #elif _BILLBOARD_Y_AXIS
                 {
-                    float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0));
-                    
                     // スケールと回転のみ（平行移動なし）のworldPos
                     float3 scaleRotatePos = mul((float3x3)unity_ObjectToWorld, v.vertex);
+                    
+                    float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0));
                     
                     float3x3 ViewRotateY = float3x3(
                         1, UNITY_MATRIX_V._m01, 0,
