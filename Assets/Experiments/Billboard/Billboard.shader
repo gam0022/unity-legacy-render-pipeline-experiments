@@ -8,7 +8,7 @@
     }
     SubShader
     {
-        Tags{ "Queue" = "AlphaTest" "RenderType" = "TransparentCutout" "IgnoreProjector" = "True" }
+        Tags{ "Queue" = "AlphaTest" "RenderType" = "TransparentCutout" "IgnoreProjector" = "True" "DisableBatching" = "True" }
 
         Pass
         {
