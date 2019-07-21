@@ -1,4 +1,4 @@
-﻿Shader "Unlit/Billboard"
+﻿Shader "Unlit/Billboard-Y-axis"
 {
     Properties
     {
@@ -38,10 +38,24 @@
             {
                 v2f o;
 
-                // 全軸のビルボード
-                //float3 viewPos = UnityObjectToViewPos(float3(0.0, 0.0, 0.0)) + v.vertex.xyz;
-                //float3 viewPos = UnityObjectToViewPos(float3(0.0, 0.0, 0.0)) + float3(-v.vertex.x, v.vertex.yz);
-                float3 viewPos = UnityObjectToViewPos(float3(0.0, 0.0, 0.0)) + float3(v.vertex.xy, -v.vertex.z);
+                // Y軸のビルボード
+                /*float3x3 ViewOnlyYRotate = float3x3(
+                    UNITY_MATRIX_V._m00, UNITY_MATRIX_V._m01, UNITY_MATRIX_V._m02,
+                    UNITY_MATRIX_V._m10, UNITY_MATRIX_V._m11, UNITY_MATRIX_V._m12,
+                    UNITY_MATRIX_V._m20, UNITY_MATRIX_V._m21, UNITY_MATRIX_V._m22,
+                );*/
+                /*float3x3 ViewOnlyYRotate = float3x3(
+                    1, UNITY_MATRIX_V._m01, UNITY_MATRIX_V._m02,
+                    0, UNITY_MATRIX_V._m11, UNITY_MATRIX_V._m12,
+                    0, UNITY_MATRIX_V._m21, UNITY_MATRIX_V._m22
+                );*/
+                float3x3 ViewOnlyYRotate = float3x3(
+                    1, UNITY_MATRIX_V._m01, 0,
+                    0, UNITY_MATRIX_V._m11, 0,
+                    0, UNITY_MATRIX_V._m21, -1
+                );
+
+                float3 viewPos = UnityObjectToViewPos(float3(0.0, 0.0, 0.0)) + mul(ViewOnlyYRotate, v.vertex);
                 o.vertex = mul(UNITY_MATRIX_P, float4(viewPos, 1.0));
 
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
