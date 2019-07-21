@@ -84,13 +84,13 @@ Shader "Demoscene/ImageEffect/Reiwa-Glitch"
                 // ifs
                 // TODO: Use ShaderVariant
                 if (_IfsIteration > 0) {
-                    vec2 q = (uv - 0.5) * 4.0;
+                    vec2 q = ((uv) - 0.4) * 5.0;
                     //float d = 9999.0;
                     float z = _IfsRateA * PI2;
                     for (int j = 0; j < _IfsIteration; ++j) {
-                        q = abs(q - _IfsRateC);
+                        q = abs(q - 0.5);
                         q = mul(rot(_IfsRateB * PI2), q);
-                        q = abs(q - _IfsRateC);
+                        q = abs(q - 0.5);
                         q = mul(rot(z), q);
                         q *= _IfsRateD;
                         //float k = sdRect(q, vec2(0.6, 0.1 + q.x));

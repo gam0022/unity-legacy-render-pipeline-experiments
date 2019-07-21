@@ -67,9 +67,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _IfsIteration: 0
+    - _IfsIteration: 0.88
     - _IfsRateA: 0
-    - _IfsRateB: -0.105285645
+    - _IfsRateB: 0
     - _IfsRateC: 0
     - _IfsRateD: 1
     - _Invert: 0
