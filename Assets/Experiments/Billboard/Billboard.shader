@@ -3,6 +3,7 @@
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        [KeywordEnum(OFF, ALL_AXIS, Y_AXIS)] _BILLBOARD("Billboard Mode", Float) = 1
     }
     SubShader
     {
@@ -17,6 +18,7 @@
             #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
+            #pragma multi_compile _BILLBOARD_OFF _BILLBOARD_ALL_AXIS _BILLBOARD_Y_AXIS
 
             struct appdata
             {
@@ -38,11 +40,26 @@
             {
                 v2f o;
 
-                // 全軸のビルボード
-                //float3 viewPos = UnityObjectToViewPos(float3(0.0, 0.0, 0.0)) + v.vertex.xyz;
-                //float3 viewPos = UnityObjectToViewPos(float3(0.0, 0.0, 0.0)) + float3(-v.vertex.x, v.vertex.yz);
-                float3 viewPos = UnityObjectToViewPos(float3(0.0, 0.0, 0.0)) + float3(v.vertex.xy, -v.vertex.z);
-                o.vertex = mul(UNITY_MATRIX_P, float4(viewPos, 1.0));
+                #if _BILLBOARD_OFF
+                {
+                    o.vertex = UnityObjectToClipPos(v.vertex);
+                }
+                #elif _BILLBOARD_ALL_AXIS
+                {
+                    float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0)) + float3(v.vertex.xy, -v.vertex.z);// 右手系に変換
+                    o.vertex = mul(UNITY_MATRIX_P, float4(viewPos, 1.0));
+                }
+                #elif _BILLBOARD_Y_AXIS
+                {
+                    float3x3 ViewRotateY = float3x3(
+                        1, UNITY_MATRIX_V._m01, 0,
+                        0, UNITY_MATRIX_V._m11, 0,
+                        0, UNITY_MATRIX_V._m21, -1// 右手系に変換
+                    );
+                    float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0)) + mul(ViewRotateY, v.vertex);
+                    o.vertex = mul(UNITY_MATRIX_P, float4(viewPos, 1.0));
+                }
+                #endif
 
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 UNITY_TRANSFER_FOG(o,o.vertex);
