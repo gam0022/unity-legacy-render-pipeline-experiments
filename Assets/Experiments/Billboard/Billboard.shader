@@ -45,27 +45,31 @@
 
                 #if _BILLBOARD_OFF
                 {
+                    // ビルボードなしの通常の座標変換
                     o.vertex = UnityObjectToClipPos(v.vertex);
                 }
                 #elif _BILLBOARD_ALL_AXIS
                 {
-                    // スケールと回転のみ（平行移動なし）のworldPos
+                    // スケールと回転のみ（平行移動なし）だけのワールド変換
                     float3 scaleRotatePos = mul((float3x3)unity_ObjectToWorld, v.vertex);
                     
+                    // Meshの原点をModelView変換
                     float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0));
                     
-                    // zの符号を反転して右手系に変換
+                    // zの符号を反転して右手系に変換して、View変換をスキップした座標をviewPosに加算
                     viewPos += float3(scaleRotatePos.xy, -scaleRotatePos.z);
                     
                     o.vertex = mul(UNITY_MATRIX_P, float4(viewPos, 1.0));
                 }
                 #elif _BILLBOARD_Y_AXIS
                 {
-                    // スケールと回転のみ（平行移動なし）のworldPos
+                    // スケールと回転のみ（平行移動なし）だけのワールド変換
                     float3 scaleRotatePos = mul((float3x3)unity_ObjectToWorld, v.vertex);
                     
+                    // Meshの原点をModelView変換
                     float3 viewPos = UnityObjectToViewPos(float3(0, 0, 0));
                     
+                    // View行列からY軸の回転だけ抽出した行列を生成
                     float3x3 ViewRotateY = float3x3(
                         1, UNITY_MATRIX_V._m01, 0,
                         0, UNITY_MATRIX_V._m11, 0,
